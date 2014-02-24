@@ -1,4 +1,4 @@
-# Attributable [![Build Status](https://travis-ci.org/louismrose/mutiny.png?branch=master)](https://travis-ci.org/louismrose/mutiny) [![Code Climate](https://codeclimate.com/github/louismrose/mutiny.png)](https://codeclimate.com/github/louismrose/mutiny) [![Dependency Status](https://gemnasium.com/louismrose/mutiny.png)](https://gemnasium.com/louismrose/mutiny) [![Coverage Status](https://coveralls.io/repos/louismrose/mutiny/badge.png?branch=master)](https://coveralls.io/r/louismrose/mutiny?branch=master)
+# Attributable [![Build Status](https://travis-ci.org/mutiny/attributable.png)](https://travis-ci.org/mutiny/attributable) [![Code Climate](https://codeclimate.com/github/mutiny/attributable.png)](https://codeclimate.com/github/mutiny/attributable)  [![Coverage Status](https://coveralls.io/repos/mutiny/attributable/badge.png?branch=master)](https://coveralls.io/r/mutiny/attributable?branch=master)
 
 A tiny library that makes it easy to create value objects.
 
