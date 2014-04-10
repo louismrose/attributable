@@ -95,17 +95,30 @@ describe Attributable do
       expect(s.active).to be_false
     end
 
+    it "should not override any custom methods" do
+      class SuperUser7 < User
+        def inspect
+          "SUPERUSER"
+        end
+      end
+
+      s = SuperUser7.new(id: 1)
+
+      expect(s.id).to eq(1)
+      expect(s.inspect).to eq("SUPERUSER")
+    end
+
     it "shouldn't automatically specialise unless superclass is an instance of Attributable" do
       class PORO
         attr_accessor :name
       end
 
-      class SuperUser7 < PORO
+      class SuperUser8 < PORO
         extend Attributable
         attributes :forename, :surname
       end
 
-      expect { SuperUser7.new }.to_not raise_error
+      expect { SuperUser8.new }.to_not raise_error
     end
   end
 end
