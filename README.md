@@ -76,8 +76,6 @@ Attributable adds an `inspect` method to your class which display attribute valu
 
 Attributable provides the `initialize_attributes` method which can be used if you need to specify your own `initialize` method. For example:
 
-    require "attributable"
-
     class UserWithDerivedAttribute
       extend Attributable
       attributes :forename, :surname
@@ -125,6 +123,22 @@ Specialising classes can override the defaults set in specialised classes.
 
     Ronson.new(forename: "Jon").inspect # <Ronson forename="Jon", surname="Ronson">
     Ronson.new(forename: "Mark").inspect # <Ronson forename="Mark", surname="Ronson">
+
+### Automatic specialisation for superclasses
+
+`specialise` is automatically called when subclassing a type that already mixes-in Attributable. In other words, the following code:
+
+    class AuthorWithDerivedAttribute < UserWithDerivedAttribute
+      attributes blogs: []
+    end
+    
+is equivalent to the slightly more verbose:
+
+    class AuthorWithDerivedAttribute < UserWithDerivedAttribute
+      specialises UserWithDerivedAttribute
+      attributes blogs: []
+    end
+
 
 ## Installation
 

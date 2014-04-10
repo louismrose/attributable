@@ -79,4 +79,33 @@ describe Attributable do
       )
     end
   end
+
+  describe "automatic specialisation" do
+    it "should automatically specialise if superclass is an instance of Attributable" do
+      class SuperUser6 < User
+        attributes :password, active: true
+      end
+
+      s = SuperUser6.new(id: 1, forename: "Bob", password: "secret", active: false)
+
+      expect(s.id).to eq(1)
+      expect(s.forename).to eq("Bob")
+      expect(s.surname).to eq("Bloggs")
+      expect(s.password).to eq("secret")
+      expect(s.active).to be_false
+    end
+
+    it "shouldn't automatically specialise unless superclass is an instance of Attributable" do
+      class PORO
+        attr_accessor :name
+      end
+
+      class SuperUser7 < PORO
+        extend Attributable
+        attributes :forename, :surname
+      end
+
+      expect { SuperUser7.new }.to_not raise_error
+    end
+  end
 end

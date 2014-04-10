@@ -16,6 +16,7 @@ module Attributable
     @predefined_attributes ||= {}
     @predefined_attributes = super_attributes.merge(@predefined_attributes)
     add_instance_methods(@predefined_attributes)
+    @predefined_attributes
   end
 
   private
@@ -42,6 +43,9 @@ module Attributable
     end
 
     define_method "initialize_attributes" do |attributes = {}|
+      if self.class.superclass.kind_of? Attributable
+        predefined_attributes = self.class.specialises(self.class.superclass)
+      end
       @attributes = predefined_attributes.merge(attributes)
     end
   end
