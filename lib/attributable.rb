@@ -38,6 +38,10 @@ module Attributable
 
   def add_constructor(predefined_attributes)
     define_method "initialize" do |attributes = {}|
+      initialize_attributes(attributes)
+    end
+
+    define_method "initialize_attributes" do |attributes = {}|
       @attributes = predefined_attributes.merge(attributes)
     end
   end

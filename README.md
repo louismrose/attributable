@@ -72,6 +72,34 @@ Attributable adds an `inspect` method to your class which display attribute valu
 
     john.inspect # => <User forename="John", surname="Doe">
 
+## Using with custom initialisation logic
+
+Attributable provides the `initialize_attributes` method which can be used if you need to specify your own `initialize` method. For example:
+
+    require "attributable"
+
+    class UserWithDerivedAttribute
+      extend Attributable
+      attributes :forename, :surname
+      
+      attr_accessor :fullname
+      
+      def initialize(attributes = {})
+        initialize_attributes(attributes)
+        @fullname = "#{forename} #{surname}"
+      end
+    end
+
+    john = UserWithDerivedAttribute.new(forename: "John", surname: "Doe")
+    john.forename # => "John"
+    john.fullname # => "John Doe"
+
+Note that, by default, Attributable adds the following `initialize` method:
+
+    def initialize(attributes = {})
+      initialize_attributes(attributes)
+    end
+
 ## Specialisation
 
 To allow reuse of attribute declarations, Attributable provides the `specialises` class method.
