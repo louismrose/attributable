@@ -146,22 +146,6 @@ Here's the same example, but using a module:
     
 __Note__: the `include` must occur before any call to `attributes`.
 
-### Automatic specialisation for superclasses
-
-`specialise` is automatically called when subclassing a type that already mixes-in Attributable. In other words, the following code:
-
-    class AuthorWithDerivedAttribute < UserWithDerivedAttribute
-      attributes blogs: []
-    end
-    
-is equivalent to the slightly more verbose:
-
-    class AuthorWithDerivedAttribute < UserWithDerivedAttribute
-      specialises UserWithDerivedAttribute
-      attributes blogs: []
-    end
-
-
 ## Installation
 
 Add this line to your application's Gemfile:
