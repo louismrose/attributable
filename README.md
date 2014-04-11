@@ -32,7 +32,7 @@ Default values for attributes can be set via a hash argument to `attributes`:
     anon.active   # => true
     anon.forename # => nil
 
-## Equality
+### Equality
 
 Attributable adds `eql?` and `==` methods to your class which compare attribute values and types.
 
@@ -66,13 +66,13 @@ Because Attributable overrides `eql?` and `==`, it also overrides `hash`:
     john.hash == jane.hash        # => false
     john.hash == admin_john.hash  # => false
 
-## Pretty printing
+### Pretty printing
 
 Attributable adds an `inspect` method to your class which display attribute values.
 
     john.inspect # => <User forename="John", surname="Doe">
 
-## Using with custom initialisation logic
+### Using with custom initialisation logic
 
 Attributable provides the `initialize_attributes` method which can be used if you need to specify your own `initialize` method. For example:
 
@@ -98,7 +98,7 @@ Note that, by default, Attributable adds the following `initialize` method:
       initialize_attributes(attributes)
     end
 
-## Reuse via inheritance and mix-ins
+### Reuse via inheritance and mix-ins
 
 To reuse attribute declarations, either user Ruby's built-in inheritance, mix-ins, or both:
 
