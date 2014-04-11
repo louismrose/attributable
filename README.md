@@ -98,31 +98,53 @@ Note that, by default, Attributable adds the following `initialize` method:
       initialize_attributes(attributes)
     end
 
-## Specialisation
+## Reuse via inheritance and mix-ins
 
-To allow reuse of attribute declarations, Attributable provides the `specialises` class method.
+To reuse attribute declarations, either user Ruby's built-in inheritance, mix-ins, or both:
 
-    class Author
-      extend Attributable
-      
-      specialises User
+    class Author < User
       attributes blogs: []
     end
     
     ronson = Author.new(forename: "Jon", surname: "Ronson")
     ronson.inspect # => <Author forename="Jon", surname="Ronson", blogs=[]>
     
-Specialising classes can override the defaults set in specialised classes.
+The default values defined in superclasses or mixed-in modules can be changed:
 
-    class Ronson
-      extend Attributable
-
-      specialises User
+    class Ronson < User
       attributes surname: "Ronson"
     end
 
     Ronson.new(forename: "Jon").inspect # <Ronson forename="Jon", surname="Ronson">
     Ronson.new(forename: "Mark").inspect # <Ronson forename="Mark", surname="Ronson">
+
+Here's the same example, but using a module:
+
+    module User
+      extend Attributable
+  
+      attributes :forename, :surname
+    end
+    
+    class Author
+      include User
+      extend Attributable
+      attributes blogs: []
+    end
+    
+    ronson = Author.new(forename: "Jon", surname: "Ronson")
+    ronson.inspect # => <Author forename="Jon", surname="Ronson", blogs=[]>
+    
+    class Ronson
+      include User
+      extend Attributable
+      attributes surname: "Ronson"
+    end
+    
+    Ronson.new(forename: "Jon").inspect # <Ronson forename="Jon", surname="Ronson">
+    Ronson.new(forename: "Mark").inspect # <Ronson forename="Mark", surname="Ronson">
+    
+__Note__: the `include` must occur before any call to `attributes`.
 
 ### Automatic specialisation for superclasses
 

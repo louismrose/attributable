@@ -2,23 +2,21 @@ require "attributable/version"
 
 module Attributable
   def attributes(*without_defaults, **with_defaults)
-    @predefined_attributes ||= {}
-    @predefined_attributes = @predefined_attributes.merge(from(without_defaults, with_defaults))
-    add_instance_methods(@predefined_attributes)
-  end
-
-  def specialises(clazz)
-    unless clazz.kind_of? Attributable
-      fail ArgumentError, "specialisation requires a class that extends Attributable"
-    end
-
-    super_attributes = clazz.new.instance_variable_get(:@attributes)
-    @predefined_attributes ||= {}
-    @predefined_attributes = super_attributes.merge(@predefined_attributes)
-    add_instance_methods(@predefined_attributes)
+    @attributes ||= {}
+    @attributes.merge!(attributes_from(superclass)) if respond_to?(:superclass)
+    @attributes.merge!(attributes_from(*included_modules))
+    @attributes.merge!(from(without_defaults, with_defaults))
+    add_instance_methods(@attributes)
   end
 
   private
+
+  def attributes_from(*modules)
+    modules
+      .select { |m| m.kind_of?(Attributable) }
+      .map { |m| m.instance_variable_get(:@attributes) }
+      .reduce({}, &:merge)
+  end
 
   # Converts a list of attribute names and a hash of attribute names to default values
   # to a hash of attribute names to default values
@@ -29,28 +27,23 @@ module Attributable
     end
   end
 
-  def add_instance_methods(predefined_attributes)
-    add_constructor(predefined_attributes)
-    add_accessors(predefined_attributes.keys)
-    add_equality_methods(predefined_attributes.keys)
-    add_inspect_method(predefined_attributes.keys)
+  def add_instance_methods(attributes)
+    add_constructor(attributes)
+    add_accessors(attributes.keys)
+    add_equality_methods(attributes.keys)
+    add_inspect_method(attributes.keys)
   end
 
-  def add_constructor(predefined_attributes)
-    define_method "initialize" do |attributes = {}|
-      initialize_attributes(attributes)
+  def add_constructor(attributes)
+    define_method "initialize" do |values = {}|
+      initialize_attributes(values)
     end
 
-    define_method "initialize_attributes" do |attributes = {}|
-      if self.class.superclass.kind_of? Attributable
-        super_attributes = self.class.superclass.new.instance_variable_get(:@attributes)
-        predefined_attributes = super_attributes.merge(predefined_attributes)
-      end
-
-      unknown_keys = attributes.keys - predefined_attributes.keys
+    define_method "initialize_attributes" do |values = {}|
+      unknown_keys = values.keys - attributes.keys
       fail KeyError, "Unknown attributes: #{(unknown_keys).join(", ")}" unless unknown_keys.empty?
 
-      @attributes = predefined_attributes.merge(attributes)
+      @attributes = attributes.merge(values)
     end
   end
 
