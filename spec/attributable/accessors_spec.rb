@@ -7,7 +7,7 @@ end
 
 describe Attributable do
   describe "accessors" do
-    it "should raise for an unknown attribute" do
+    it "should not have an accessor for an unknown attribute" do
       i = User.new(id: 1, forename: "John", surname: "Doe")
       expect(i.respond_to?(:address)).to be_false
     end
