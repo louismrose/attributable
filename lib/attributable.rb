@@ -46,6 +46,10 @@ module Attributable
         super_attributes = self.class.superclass.new.instance_variable_get(:@attributes)
         predefined_attributes = super_attributes.merge(predefined_attributes)
       end
+
+      unknown_keys = attributes.keys - predefined_attributes.keys
+      fail KeyError, "Unknown attributes: #{(unknown_keys).join(", ")}" unless unknown_keys.empty?
+
       @attributes = predefined_attributes.merge(attributes)
     end
   end

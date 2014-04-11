@@ -5,17 +5,6 @@ class User
   attributes :id, :forename, surname: "Bloggs"
 end
 
-class UserWithDerivedAttribute
-  extend Attributable
-  attributes :id, :forename, surname: "Bloggs"
-  attr_reader :fullname
-
-  def initialize(attributes = {})
-    initialize_attributes(attributes)
-    @fullname = "#{forename} #{surname}"
-  end
-end
-
 describe Attributable do
   describe "construction" do
     it "should accept a hash" do
@@ -41,10 +30,27 @@ describe Attributable do
       expect(i.forename).to be_nil
       expect(i.surname).to eq("Doe")
     end
+
+    it "should raise for unknown attributes" do
+      expect { User.new(password: "secret", admin: true, surname: "Doe") }.to(
+        raise_error(KeyError, "Unknown attributes: password, admin")
+      )
+    end
   end
 
   describe "constructor" do
     it "should be overridable" do
+      class UserWithDerivedAttribute
+        extend Attributable
+        attributes :id, :forename, surname: "Bloggs"
+        attr_reader :fullname
+
+        def initialize(attributes = {})
+          initialize_attributes(attributes)
+          @fullname = "#{forename} #{surname}"
+        end
+      end
+
       i = UserWithDerivedAttribute.new(id: 1, forename: "John", surname: "Doe")
 
       expect(i.id).to eq(1)
