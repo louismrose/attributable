@@ -31,7 +31,7 @@ describe Attributable do
       expect(i.surname).to eq("Doe")
     end
 
-    it "should raise for unknown attributes" do
+    it "should raise error when values for unknown attributes are specified" do
       expect { User.new(password: "secret", admin: true, surname: "Doe") }.to(
         raise_error(KeyError, "Unknown attributes: password, admin")
       )
