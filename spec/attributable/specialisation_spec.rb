@@ -14,7 +14,7 @@ describe Attributable do
       expect(p.id).to eq(1)
       expect(p.forename).to eq("Bob")
       expect(p.surname).to eq("Bloggs")
-      expect(p.active).to be_true
+      expect(p.active).to be_truthy
     end
   end
 
@@ -35,7 +35,7 @@ describe Attributable do
       expect(s.forename).to eq("Bob")
       expect(s.surname).to eq("Bloggs")
       expect(s.password).to eq("secret")
-      expect(s.active).to be_false
+      expect(s.active).to be_falsey
     end
 
     it "should ensure that subclass's attributes precede superclass's" do

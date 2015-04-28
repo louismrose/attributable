@@ -25,7 +25,7 @@ describe Attributable do
       c = User.new(id: 1, forename: nil, surname: "Doe")
       d = User.new(id: 1, forename: "John", surname: nil)
 
-      hashes = [a, b, c, d].map { |user| user.hash }
+      hashes = [a, b, c, d].map(&:hash)
 
       expect(hashes.uniq).to eq(hashes)
     end

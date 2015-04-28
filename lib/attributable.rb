@@ -13,7 +13,7 @@ module Attributable
 
   def attributes_from(*modules)
     modules
-      .select { |m| m.kind_of?(Attributable) }
+      .select { |m| m.is_a?(Attributable) }
       .map { |m| m.instance_variable_get(:@attributes) }
       .reduce({}, &:merge)
   end
@@ -31,6 +31,7 @@ module Attributable
     add_constructor(attributes)
     add_accessors(attributes.keys)
     add_equality_methods(attributes.keys)
+    add_hash_method
     add_inspect_method(attributes.keys)
   end
 
@@ -41,7 +42,7 @@ module Attributable
 
     define_method "initialize_attributes" do |values = {}|
       unknown_keys = values.keys - attributes.keys
-      fail KeyError, "Unknown attributes: #{(unknown_keys).join(", ")}" unless unknown_keys.empty?
+      fail KeyError, "Unknown attributes: #{(unknown_keys).join(', ')}" unless unknown_keys.empty?
 
       @attributes = attributes.merge(values)
     end
@@ -58,21 +59,23 @@ module Attributable
   def add_equality_methods(names)
     define_method "eql?" do |other|
       other.is_a?(self.class) &&
-      names.all? { |name| other.send(name.to_sym) == send(name.to_sym) }
+        names.all? { |name| other.send(name.to_sym) == send(name.to_sym) }
     end
 
     alias_method "==", "eql?"
+  end
 
+  def add_hash_method
     define_method "hash" do
       self.class.hash + @attributes.hash
     end
   end
 
-  def add_inspect_method(names)
+  def add_inspect_method(_names)
     define_method "inspect" do
       values = @attributes.keys
-        .map { |name| "#{name}=#{@attributes[name].inspect}" }
-        .join(", ")
+               .map { |name| "#{name}=#{@attributes[name].inspect}" }
+               .join(", ")
 
       "<#{self.class.name} #{values}>"
     end

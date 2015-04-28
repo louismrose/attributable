@@ -9,13 +9,13 @@ describe Attributable do
   describe "accessors" do
     it "should not have an accessor for an unknown attribute" do
       i = User.new(id: 1, forename: "John", surname: "Doe")
-      expect(i.respond_to?(:address)).to be_false
+      expect(i.respond_to?(:address)).to be_falsey
     end
 
     it "should not have setters" do
       i = User.new(forename: "John")
 
-      expect(i.respond_to?(:id=)).to be_false
+      expect(i.respond_to?(:id=)).to be_falsey
     end
   end
 end
